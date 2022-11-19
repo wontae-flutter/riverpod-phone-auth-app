@@ -1,3 +1,4 @@
+import 'package:firebase_phone_auth_app/screens/screen_signin_countries.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
             headline6: TextStyle(fontSize: 20),
             caption: TextStyle(color: Colors.grey, fontSize: 16),
           )),
-      initialRoute: "/",
+      initialRoute: "/splash",
       routes: {
-        "/": (context) => SplashScreen(),
+        "/splash": (context) => SplashScreen(),
         "/home": (context) => HomeScreen(),
+        "/countries": (context) => SignInCountriesScreen(),
       },
     );
   }
