@@ -9,7 +9,7 @@ class SignInScreen extends ConsumerWidget {
   Future<void> _openSignUp(BuildContext context) async {
     final navigator = Navigator.of(context);
     await navigator.pushNamed(
-      "/sign_in_phone",
+      "/sign-in-phone",
       arguments: () => navigator.pop(),
     );
     //! 와... 이거 pushReplacementNamed랑 같은게 아닌가요?

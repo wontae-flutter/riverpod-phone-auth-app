@@ -35,6 +35,8 @@ class MyApp extends StatelessWidget {
         "/splash": (context) => SplashScreen(),
         "/home": (context) => HomeScreen(),
         "/countries": (context) => SignInCountriesScreen(),
+        "/sign-in-phone": (context) => SignInPhoneScreenBuilder(),
+        "/sign-in-verification": (context) => SignInVerificationScreenBuilder(),
       },
     );
   }

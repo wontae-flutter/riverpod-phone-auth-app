@@ -8,27 +8,30 @@ import '../models/model_auth_state/auth_state.dart';
 //! 제발 돼라...
 class AuthService extends StateNotifier<AuthState> {
   AuthService({
-    this.selectedCountry,
-    this.phoneNumber,
-    this.verificationId,
+    // this.kselectedCountry,
+    this.kphoneNumber,
+    this.kverificationId,
   }) : super(AuthState.initializing()) {
     _firebaseAuth = FirebaseAuth.instance;
+    //* Instantiation되면서 FlutterLibphonenumber().init() 실행됨
     _loadCountries();
   }
 
+  //todo 기본값만 주면 해결되는...
   late FirebaseAuth _firebaseAuth;
-  CountryWithPhoneCode? selectedCountry;
-  Map? phoneNumber;
-  String? verificationId;
+  CountryWithPhoneCode kselectedCountry = CountryWithPhoneCode.us();
+  Map? kphoneNumber;
+  String? kverificationId;
   List<CountryWithPhoneCode> countries = [];
 
   Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
-  CountryWithPhoneCode? get getSelectedCountry => selectedCountry;
-  String get phoneCode => selectedCountry!.phoneCode;
-  String get formattedPhoneNumber => phoneNumber!['international'];
+  CountryWithPhoneCode? get selectedCountry => kselectedCountry;
+  String get phoneCode => kselectedCountry.phoneCode;
+  String get formattedPhoneNumber => kphoneNumber!['international'];
 
   Future<void> _loadCountries() async {
     try {
+      //* init 들어가 있음
       await FlutterLibphonenumber().init();
       var _countries = CountryManager().countries;
       _countries.sort((a, b) {
@@ -62,19 +65,20 @@ class AuthService extends StateNotifier<AuthState> {
   }
 
   Future<void> parsePhoneNumber(String inputText) async {
-    phoneNumber = await FlutterLibphonenumber().parse(
-      "+${selectedCountry!.phoneCode}${inputText.replaceAll(RegExp(r'[^0-9]'), '')}",
+    kphoneNumber = await FlutterLibphonenumber().parse(
+      "+${kselectedCountry.phoneCode}${inputText.replaceAll(RegExp(r'[^0-9]'), '')}",
       region: selectedCountry!.countryCode,
     );
-    if (phoneNumber!['type'] != 'mobile') {
+    if (kphoneNumber!['type'] != 'mobile') {
       throw Exception('You must enter a mobile phone number.');
     }
   }
 
   //todo completion()은 단순히 콜백을 말하는 것 같고...
+  //! 여기서 내가 Null value에 !를 붙였대.
   Future<void> verifyPhone(Function() completion) async {
     await _firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber!['e164'],
+      phoneNumber: kphoneNumber!['e164'],
       verificationCompleted: (AuthCredential credential) async {
         await _firebaseAuth.signInWithCredential(credential);
       },
@@ -95,7 +99,7 @@ class AuthService extends StateNotifier<AuthState> {
 
   Future<void> verifyCode(String smsCode, Function() completion) async {
     final AuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: verificationId!,
+      verificationId: kverificationId!,
       smsCode: smsCode,
     );
     final user = await _firebaseAuth.signInWithCredential(credential);

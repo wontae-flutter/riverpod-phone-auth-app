@@ -6,7 +6,7 @@ import '../services/service_auth.dart';
 
 class SignInPhoneNotifier extends StateNotifier<SignInState> {
   SignInPhoneNotifier({required this.authService})
-      : super(SignInState.notValid());
+      : super(SignInState.canSubmit());
 
   AuthService authService;
 
@@ -19,7 +19,11 @@ class SignInPhoneNotifier extends StateNotifier<SignInState> {
     );
   }
 
+  //todo 밑에있는게 실행이 안되서 그런게 아닐까?
+  //todo 밑에있는게 실행이 안되서 그런게 아닐까?
+
   Future<void> _parsePhoneNumber(String inputText) async {
+    print("_parsePhoneNumber working");
     try {
       await authService.parsePhoneNumber(inputText);
       state = SignInState.canSubmit();
